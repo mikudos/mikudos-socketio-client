@@ -1,0 +1,45 @@
+{
+    "name": "mikudos-socketio-client",
+    "version": "0.0.3",
+    "description": "mikudos-socketio-client for connection and call methods and sync events on mikudos-socketio-app server, which is provided only for socket.io connection.",
+    "main": "lib/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "compile": "shx rm -rf lib/ && tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mikudos/mikudos-socketio-client.git"
+    },
+    "keywords": [
+        "mikudos",
+        "socket.io",
+        "client"
+    ],
+    "author": "Julian Yue",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/mikudos/mikudos-socketio-client/issues"
+    },
+    "homepage": "https://github.com/mikudos/mikudos-socketio-client#readme",
+    "dependencies": {
+        "lodash": "^4.17.15",
+        "socket.io-client": "^2.3.0"
+    },
+    "devDependencies": {
+        "@types/lodash": "^4.14.149",
+        "@types/socket.io": "^2.1.4",
+        "@types/socket.io-client": "^1.4.32",
+        "shx": "^0.3.2",
+        "typescript": "^3.5.3"
+    },
+    "files": [
+        "lib",
+        "src",
+        "index.d.ts"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "types": "index.d.ts"
+}
