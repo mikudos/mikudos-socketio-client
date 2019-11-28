@@ -8,13 +8,19 @@ export class MikudosSocketIoClient {
     authenticated: boolean = false;
     rpcEventName: string;
     chatEventName: string;
+    duplexEventName: string;
     jwt?: string;
     responseEventEmitter: EventEmitter = new EventEmitter();
     rpcResEventEmitter: EventEmitter = new EventEmitter();
     chatEventEmitter: EventEmitter = new EventEmitter();
+    duplexEventEmitter: EventEmitter = new EventEmitter();
     constructor(
         { uri, option = {} }: any,
-        { rpcEventName = 'rpc-call', chatEventName = 'message' } = {},
+        {
+            rpcEventName = 'rpc-call',
+            chatEventName = 'message',
+            duplexEventName = 'stream-call'
+        } = {},
         public saveTokenCallback = (token: string) => {},
         public getTokenMethod = () => this.jwt
     ) {
@@ -25,6 +31,7 @@ export class MikudosSocketIoClient {
         this.jwt = this.getTokenMethod();
         this.rpcEventName = rpcEventName;
         this.chatEventName = chatEventName;
+        this.duplexEventName = duplexEventName;
         this.socket = io(uri, option);
         this.init();
     }
@@ -132,6 +139,54 @@ export class MikudosSocketIoClient {
             this.socket.emit(
                 `leave ${this.chatEventName}`,
                 data,
+                (data: any) => {
+                    if (data.error) reject(data);
+                    resolve(data);
+                }
+            );
+        });
+    }
+
+    async duplexCall(method: string, data: any, room: string = '') {
+        return await new Promise((resolve, reject) => {
+            this.socket.emit(
+                this.duplexEventName,
+                {
+                    method,
+                    room,
+                    data
+                },
+                (data: any) => {
+                    if (data.error) reject(data);
+                    // handle duplex events
+                    this.socket.on(
+                        `${this.duplexEventName} ${method}`,
+                        (md: any) => this.duplexEventEmitter.emit(method, md)
+                    );
+                    resolve(data);
+                }
+            );
+        });
+    }
+
+    async duplexSend(method: string, data: any) {
+        return await new Promise((resolve, reject) => {
+            this.socket.emit(
+                `${this.duplexEventName} send`,
+                { method, data },
+                (data: any) => {
+                    if (data.error) reject(data);
+                    resolve(data);
+                }
+            );
+        });
+    }
+
+    async duplexCancelCall(method: string, data: any = null) {
+        return await new Promise((resolve, reject) => {
+            this.socket.emit(
+                `${this.duplexEventName} cancel`,
+                { method, data },
                 (data: any) => {
                     if (data.error) reject(data);
                     resolve(data);
