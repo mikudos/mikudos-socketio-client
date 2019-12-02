@@ -1,3 +1,5 @@
+![Mikudos Gate](https://img.shields.io/badge/MIKUDOS-Gate-blue?style=for-the-badge&logo=appveyor)
+
 # MIKUDOS SOCKETIO CLIENT
 
 mikudos-socketio-client for connection and call methods and sync events on mikudos-socketio-app server, which is provided only for socket.io connection.
