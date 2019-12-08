@@ -17,6 +17,7 @@ export class MikudosSocketIoClient {
     constructor(
         { uri, option = {} }: any,
         {
+            rootNamespace = '',
             rpcEventName = 'rpc-call',
             chatEventName = 'message',
             duplexEventName = 'stream-call'
@@ -28,11 +29,13 @@ export class MikudosSocketIoClient {
             throw new Error(
                 'URI can not be null for new MikudosSocketIoClient at params[0].uri'
             );
+        if (rootNamespace && !rootNamespace.startsWith('/'))
+            throw new Error('namespace not valid, is must start with /');
         this.jwt = this.getTokenMethod();
         this.rpcEventName = rpcEventName;
         this.chatEventName = chatEventName;
         this.duplexEventName = duplexEventName;
-        this.socket = io(uri, option);
+        this.socket = io(`${uri}${rootNamespace}`, option);
         this.init();
     }
 
