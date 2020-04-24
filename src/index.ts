@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { EventEmitter } from 'events';
 
 export class MikudosSocketIoClient {
-    socket: any;
+    socket: SocketIOClient.Socket;
     state: boolean = false;
     authenticated: boolean = false;
     rpcEventName: string;
@@ -19,7 +19,7 @@ export class MikudosSocketIoClient {
         {
             rpcEventName = 'rpc-call',
             chatEventName = 'message',
-            duplexEventName = 'stream-call'
+            duplexEventName = 'stream-call',
         } = {},
         public saveTokenCallback = (token: string) => {},
         public getTokenMethod = () => this.jwt
@@ -102,7 +102,7 @@ export class MikudosSocketIoClient {
                 'authentication',
                 {
                     strategy: 'jwt',
-                    accessToken: this.jwt
+                    accessToken: this.jwt,
                 },
                 (data: any) => {
                     if (data.error) reject(data);
@@ -154,7 +154,7 @@ export class MikudosSocketIoClient {
                 {
                     method,
                     room,
-                    data
+                    data,
                 },
                 (data: any) => {
                     if (data.error) reject(data);
